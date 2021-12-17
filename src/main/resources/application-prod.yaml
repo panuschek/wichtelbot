@@ -1,0 +1,7 @@
+app:
+  bot-token: ${BOT_TOKEN}
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
