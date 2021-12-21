@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component
 final class WichtelBot(
   private val telegramBot: TelegramBot,
   private val participantRepository: ParticipantRepository,
+  private val franziBot: FranziBot
 ) : UpdatesListener {
 
   init {
@@ -34,22 +35,29 @@ final class WichtelBot(
       )
         return@forEach
 
-      if (message.text().startsWith("/start")) {
-        handleConversationStart(message.chat().id())
-      } else {
-        val participant = participantRepository.findByChatId(message.chat().id())
-        when (participant?.conversationStage) {
-            ConversationStage.AWAITING_INITIAL_RESPONSE -> {
-              handleInitialResponse(participant, it.message())
-            }
-            ConversationStage.AWAITING_USERNAME -> {
-              handleUsernameResponse(participant, it.message())
-            }
-            ConversationStage.AWAITING_ADDRESS -> {
-              handleAddressResponse(participant, it.message())
-            }
-        }
-      }
+      franziBot.handleFranzi(telegramBot, it.message())
+
+//      if (message.text().startsWith("/start")) {
+//        handleConversationStart(message.chat().id())
+//      } else {
+//        val participant = participantRepository.findByChatId(message.chat().id())
+//        when (participant?.conversationStage) {
+//            ConversationStage.AWAITING_INITIAL_RESPONSE -> {
+//              handleInitialResponse(participant, it.message())
+//            }
+//            ConversationStage.AWAITING_USERNAME -> {
+//              handleUsernameResponse(participant, it.message())
+//            }
+//            ConversationStage.AWAITING_ADDRESS -> {
+//              handleAddressResponse(participant, it.message())
+//            }
+//          else -> {
+//            if(message.chat().id() == 248206910L) {
+//              franziBot.handleFranzi(telegramBot, it.message())
+//            }
+//          }
+//        }
+//      }
     }
 
     return UpdatesListener.CONFIRMED_UPDATES_ALL
